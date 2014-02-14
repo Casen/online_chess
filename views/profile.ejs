@@ -3,23 +3,17 @@
   <head>
     <title>Online Chess</title>
     <link rel="stylesheet" href="/stylesheets/chessboard-0.3.0.css" />
+    <link rel="stylesheet" href="/stylesheets/main.css" />
     <script src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
     <script src="/scripts/chessboard-0.3.0.min.js"></script>
     <script src="/scripts/chess.js"></script>
-    <script src="/scripts/game.js"></script>
   </head>
   <body>
     <div class="container">
       <h1>Profile</h1>
-      <div id="board" style="width: 500px;"></div>
+      <div id="board"></div>
     </div>
-    <script type="text/javascript">
-      var cfg = {
-        draggable: true,
-        dropOffBoard: 'snapback', // this is the default
-        position: 'start'
-      };
-      window.board = new ChessBoard('board', cfg);
-    </script>
+    <div id="pgn">1. e2e4</div>
+    <script src="/scripts/game.js"></script>
   </body>
 </html>
