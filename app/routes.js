@@ -1,4 +1,7 @@
 var fb      = require('../lib/facebook');
+var mongoose = require('mongoose');
+var User = require('./models/user');
+var Game = require('./models/game');
 
 module.exports = function(app, passport) {
 
@@ -18,12 +21,18 @@ module.exports = function(app, passport) {
     var token = req.user.facebook.token;
     fb.api(token, '/me/friends', function (friends) {
       friends = JSON.parse(friends);
-      console.log('!!!', friends.data.length);
-      console.log(req.user.facebook);
       res.render('profile.ejs', {
         user : req.user // get the user out of session and pass to template
       });
     });
+  });
+
+
+  app.get('/games/:id', function (req, res) {
+    var gameId = mongoose.Schema.ObjectId(req.id);
+    var game = Game.findOne({_id: gameId}).populate('black').populate('white');
+    console.log(game);
+    res.render('profile', {game: game});
   });
 
   // =====================================

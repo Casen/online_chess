@@ -72,7 +72,8 @@ var cfg = {
   position: 'start',
   onDragStart: onDragStart,
   onDrop: onDrop,
-  onSnapEnd: onSnapEnd
+  onSnapEnd: onSnapEnd,
+  pieceTheme: '/img/chesspieces/wikipedia/{piece}.png'
 };
 board = new ChessBoard('board', cfg);
 
