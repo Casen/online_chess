@@ -1,15 +1,12 @@
 var express  = require('express');
 var app      = express();
 var port     = process.env.PORT || 8080;
-var mongoose = require('mongoose');
 var passport = require('passport');
 var flash    = require('connect-flash');
 var configAuth = require('./config/auth');
+var db = require('./app/models');
 
 var configDB = require('./config/database.js');
-
-// configuration ===============================================================
-mongoose.connect(configDB.url); // connect to our database
 
 require('./config/passport')(passport); // pass passport for configuration
 
@@ -36,5 +33,5 @@ require('./app/routes.js')(app, passport); // load our routes and pass in our ap
 
 // launch ======================================================================
 app.listen(port);
-console.log('The magic happens on port ' + port);
+console.log('Chess Online listening on port ' + port);
 
