@@ -1,16 +1,12 @@
-var mongoose = require('mongoose');
-
-// define the schema for our user model
-var userSchema = mongoose.Schema({
-
-    facebook         : {
-        id           : String,
-        token        : String,
-        email        : String,
-        name         : String
+module.exports = function(sequelize, DataTypes) {
+  var User = sequelize.define('User', {
+    username: DataTypes.STRING
+  }, {
+    classMethods: {
+      associate: function(models) {
+        User.hasMany(models.Game);
+      }
     }
-
-});
-
-// create the model for users and expose it to our app
-module.exports = mongoose.model('User', userSchema);
+  })
+  return User;
+}
