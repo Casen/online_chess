@@ -1,6 +1,7 @@
 var FacebookStrategy = require('passport-facebook').Strategy;
 var configAuth = require('./auth');
-var User             = require('../app/models/user');
+var db             = require('../app/models');
+var User = db.User;
 
 module.exports = function(passport) {
 
@@ -11,8 +12,8 @@ module.exports = function(passport) {
 
   // used to deserialize the user
   passport.deserializeUser(function(id, done) {
-    User.findById(id, function(err, user) {
-      done(err, user);
+    User.find(id).success(function(user) {
+      done(null, user);
     });
   });
 
@@ -26,40 +27,27 @@ module.exports = function(passport) {
   // facebook will send back the token and profile
   function(token, refreshToken, profile, done) {
 
-    console.log('!!!profile', profile);
     process.nextTick(function() {
 
       // find the user in the database based on their facebook id
-      User.findOne({ 'facebook.id' : profile.id }, function(err, user) {
-
-        // if there is an error, stop everything and return that
-        // ie an error connecting to the database
-        if (err)
-          return done(err);
+      User.find({ where: {facebook_id: profile.id} }).success(function(user) {
 
         // if the user is found, then log them in
         if (user) {
           return done(null, user); // user found, return that user
         } else {
-          // if there is no user found with that facebook id, create them
-          var newUser = new User();
 
           // set all of the facebook information in our user model
-          newUser.facebook.id    = profile.id; // set the users facebook id
-          newUser.facebook.token = token; // we will save the token that facebook provides to the user
-          newUser.facebook.name  = profile.name.givenName + ' ' + profile.name.familyName; // look at the passport user profile to see how names are returned
-          newUser.facebook.email = profile.emails[0].value; // facebook can return multiple emails so we'll take the first
-
-          // save our user to the database
-          newUser.save(function(err) {
-            if (err)
-              throw err;
-
-            // if successful, return the new user
+          User.create({
+            facebook_id:    profile.id, // set the users facebook id
+            facebook_token: token, // we will save the token that facebook provides to the user
+            first_name:     profile.name.givenName,
+            last_name:      profile.name.familyName,
+            email:          profile.emails[0].value // facebook can return multiple emails so we'll take the first
+          }).success(function (newUser) {
             return done(null, newUser);
           });
         }
-
       });
     });
   }));

@@ -34,4 +34,3 @@ require('./app/routes.js')(app, passport); // load our routes and pass in our ap
 // launch ======================================================================
 app.listen(port);
 console.log('Chess Online listening on port ' + port);
-

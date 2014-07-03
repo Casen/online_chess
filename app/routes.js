@@ -1,5 +1,4 @@
 var fb      = require('../lib/facebook');
-var mongoose = require('mongoose');
 var User = require('./models/user');
 var Game = require('./models/game');
 
@@ -18,7 +17,7 @@ module.exports = function(app, passport) {
   // we will want this protected so you have to be logged in to visit
   // we will use route middleware to verify this (the isLoggedIn function)
   app.get('/profile', isLoggedIn, function(req, res) {
-    var token = req.user.facebook.token;
+    var token = req.user.facebook_token;
     fb.api(token, '/me/friends', function (friends) {
       friends = JSON.parse(friends);
       res.render('profile.ejs', {
