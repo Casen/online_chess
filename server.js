@@ -7,16 +7,14 @@ var configAuth = require('./config/auth');
 
 function Server(config) {
 
-  var app      = express();
+  var app = express();
 
-  // Setup the database client with the config
-  var db = require('./app/utils/database-client')(config)
-
-  // save these for late
+  // save these for later
   this.app = app;
   this.config = config;
 
-
+  // Setup the database client with the config
+  this.db = require('./app/utils/database-client')(config)
 
   // set up our express application
   app.use(express.static(__dirname + '/public'));
@@ -34,7 +32,7 @@ function Server(config) {
 
 
 
-  require('./config/passport')(db, passport); // pass passport for configuration
+  require('./config/passport')(this, passport); // pass passport for configuration
 
   // routes ======================================================================
   require('./app/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport

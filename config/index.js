@@ -1,3 +1,4 @@
+var url = require('url');
 var Settings = require('shallow-settings');
 
 var configs = {
@@ -12,9 +13,16 @@ var configs = {
     },
     url: {
       protocol: 'http',
-      host: 'localhost',
+      hostname: 'localhost',
       port: 8080
-    }
+    },
+    facebookAuth: Settings.lazy(function () {
+      return {
+        clientID    : '608969422491715',
+        clientSecret  : 'fca566d9138176c7ecea872ddf62c420',
+        callbackURL   : url.format(this.url) + '/auth/facebook/callback'
+      }
+    })
   },
   local: {
   },
