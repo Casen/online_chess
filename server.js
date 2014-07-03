@@ -1,16 +1,22 @@
 var express  = require('express');
-var app      = express();
-var port     = process.env.PORT || 8080;
+var url = require('url');
 var passport = require('passport');
 var flash    = require('connect-flash');
 var configAuth = require('./config/auth');
-var db = require('./app/models');
 
-var configDB = require('./config/database.js');
 
-require('./config/passport')(passport); // pass passport for configuration
+function Server(config) {
 
-app.configure(function() {
+  var app      = express();
+
+  // Setup the database client with the config
+  var db = require('./app/utils/database-client')(config)
+
+  // save these for late
+  this.app = app;
+  this.config = config;
+
+
 
   // set up our express application
   app.use(express.static(__dirname + '/public'));
@@ -26,11 +32,19 @@ app.configure(function() {
   app.use(passport.session()); // persistent login sessions
   app.use(flash()); // use connect-flash for flash messages stored in session
 
-});
 
-// routes ======================================================================
-require('./app/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
 
-// launch ======================================================================
-app.listen(port);
-console.log('Chess Online listening on port ' + port);
+  require('./config/passport')(db, passport); // pass passport for configuration
+
+  // routes ======================================================================
+  require('./app/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
+
+}
+
+Server.prototype.listen = function () {
+  var urlConfig = this.config.url;
+  this._app = this.app.listen(urlConfig.port);
+  console.log('Listening on: ' + url.format(urlConfig));
+};
+
+module.exports = Server;
