@@ -1,0 +1,38 @@
+#!/usr/bin/env node
+
+var assert = require('assert');
+var program = require('commander');
+
+// Set up commander
+program
+  .version(require('../package.json').version)
+  .option('-e, --env, --environment [env]', 'Specify environment to load from (local, development, production)')
+  .parse(process.argv);
+program.name = 'online-chess';
+
+// If there was no environment, use NODE_ENV or 'local'
+var env = program.env || process.env.NODE_ENV || 'local';
+
+// Attempt to load settings back
+var settings = require('../config').getSettings({env: env});
+assert.notEqual(settings.ENV, 'common', 'Could not locate environment "' + env + '"');
+
+// Log the environment
+console.log('Using environment "' + env + '"');
+
+// Set up NODE_ENV to get best practices from express/connect
+// DEV: We must use NODE_ENV for connect https://github.com/senchalabs/connect/blob/2.12.0/lib/proto.js#L22
+// DEV: If we remove this, check for a regression where `header.html` contains a bad variable.
+// This causes error handlers to fail and the stack trace to dump as per default with `connect`.
+process.env.NODE_ENV = env;
+
+// Create a server and start listening
+// DEV: `require('./server');` *must* come after the NODE_ENV setting
+var Server = require('../server');
+var server = new Server(settings);
+server.listen();
+
+// When an uncaught exception occurs, catch it and log it
+process.on('uncaughtException', function (err) {
+  console.log('Uncaught exception', {error: err});
+});
