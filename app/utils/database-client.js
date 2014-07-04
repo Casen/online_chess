@@ -2,7 +2,7 @@ var fs        = require('fs');
 var path      = require('path');
 var Sequelize = require('sequelize');
 var lodash    = require('lodash');
-var db        = {};
+var models    = {};
 
 module.exports = function(config) {
   var dbConfig = config.database;
@@ -29,18 +29,21 @@ module.exports = function(config) {
     })
     .forEach(function(file) {
       var model = sequelize.import(path.join(dir, file));
-      db[model.name] = model;
+      models[model.name] = model;
     });
 
-  Object.keys(db).forEach(function(modelName) {
-    if ('associate' in db[modelName]) {
-      db[modelName].associate(db);
+  Object.keys(models).forEach(function(modelName) {
+    if ('associate' in models[modelName]) {
+      models[modelName].associate(models);
     }
   });
 
-  return lodash.extend({
-    sequelize: sequelize,
-    Sequelize: Sequelize
-  }, db);
+  return {
+    models: lodash.extend({
+      sequelize: sequelize,
+      Sequelize: Sequelize
+    }, models),
+    db: sequelize
+  }
 };
 

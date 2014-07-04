@@ -2,7 +2,6 @@ var express  = require('express');
 var url = require('url');
 var passport = require('passport');
 var flash    = require('connect-flash');
-var configAuth = require('./config/auth');
 
 
 function Server(config) {
@@ -14,7 +13,7 @@ function Server(config) {
   this.config = config;
 
   // Setup the database client with the config
-  this.db = require('./app/utils/database-client')(config)
+  this.dbClient = require('./app/utils/database-client')(config)
 
   // set up our express application
   app.use(express.static(__dirname + '/public'));

@@ -1,9 +1,8 @@
 var FacebookStrategy = require('passport-facebook').Strategy;
-var configAuth = require('./auth');
 
 module.exports = function(server, passport) {
 
-  var User = server.db.User;
+  var User = server.dbClient.models.User;
   var facebookAuth = server.config.facebookAuth;
   console.log(facebookAuth.callbackURL);
 
