@@ -21,6 +21,8 @@
     "shallow-settings": "^0.1.0"
   },
   "scripts": {
-    "start": "bin/online-chess --env local"
+    "start": "bin/online-chess --env local",
+    "migrate_down": "bin/migrate --dir down",
+    "migrate_up": "bin/migrate --dir up"
   }
 }

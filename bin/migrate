@@ -1,0 +1,30 @@
+#!/usr/bin/env node
+
+var assert = require('assert');
+var program = require('commander');
+
+// Set up commander
+program
+  .version(require('../package.json').version)
+  .option('-e, --env, --environment [env]', 'Specify environment to load from (local, development, production)')
+  .option('-d, --dir, --direction [dir]', 'Specify direction to migrate (up or down)')
+  .parse(process.argv);
+program.name = 'online-chess';
+
+// If there was no environment, use NODE_ENV or 'local'
+var env = program.env || process.env.NODE_ENV || 'local';
+
+// Attempt to load settings back
+var settings = require('../config').getSettings({env: env});
+assert.notEqual(settings.ENV, 'common', 'Could not locate environment "' + env + '"');
+
+
+var sys = require('sys')
+var exec = require('child_process').exec;
+var dir = program.dir;
+var migrationCommand = "node_modules/sequelize/bin/sequelize -m";
+if (dir === 'down') {
+  migrationCommand += ' -u'
+}
+function puts(error, stdout, stderr) { sys.puts(stdout) }
+exec(migrationCommand, puts);
