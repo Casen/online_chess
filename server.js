@@ -2,6 +2,7 @@ var express  = require('express');
 var url = require('url');
 var passport = require('passport');
 var flash    = require('connect-flash');
+var routes = require('./app/routes');
 
 
 function Server(config) {
@@ -32,9 +33,10 @@ function Server(config) {
 
 
   require('./config/passport')(this, passport); // pass passport for configuration
+  this.config.passport = passport;
 
   // routes ======================================================================
-  require('./app/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
+  app.use(routes(this.config));
 
 }
 
