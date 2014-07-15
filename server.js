@@ -23,6 +23,7 @@ function Server(config) {
   app.use(express.bodyParser()); // get information from html forms
 
   app.set('view engine', 'ejs'); // set up ejs for templating
+  app.set('views', __dirname + '/app/views');
 
   // required for passport
   app.use(express.session({ secret: 'ASDK@#$(ASDFJ@#$(SJFSDFLSDF(@#$*@#$*@#$SDFKLGLTO' })); // session secret

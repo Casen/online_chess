@@ -1,4 +1,4 @@
-var fb      = require('../../lib/facebook');
+var fb      = require('../lib/facebook');
 var middlewares = require('../middlewares');
 
 exports.dashboard = function (config) {

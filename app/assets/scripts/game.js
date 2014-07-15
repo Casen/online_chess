@@ -1,8 +1,11 @@
-var board,
-  game = new Chess(),
-  statusEl = $('#status'),
-  fenEl = $('#fen'),
-  pgnEl = $('#pgn');
+var Chess = require('chess').Chess;
+var $ = require('jquery');
+
+var statusEl = $('#status');
+var fenEl = $('#fen');
+var pgnEl = $('#pgn');
+var game = new Chess();
+var board;
 
 // do not pick up pieces if the game is over
 // only pick up pieces for the side to move
