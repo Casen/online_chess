@@ -17,7 +17,7 @@ function Server(config) {
   this.dbClient = require('./app/utils/database-client')(config)
 
   // set up our express application
-  app.use(express.static(__dirname + '/public'));
+  app.use(express.static(__dirname + '/build'));
   app.use(express.logger('dev')); // log every request to the console
   app.use(express.cookieParser()); // read cookies (needed for auth)
   app.use(express.bodyParser()); // get information from html forms
