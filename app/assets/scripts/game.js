@@ -1,4 +1,4 @@
-var Chess = require('chess').Chess;
+var Chess = require('chess.js').Chess;
 var $ = require('jquery');
 
 var statusEl = $('#status');
